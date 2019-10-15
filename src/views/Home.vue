@@ -76,12 +76,16 @@ export default {
     return {
       meshMaterial: new THREE.MeshPhongMaterial({
         color: 0xffffff,
+        flatShading: false,
+        // roughness: 0,
+        // metalness: 0,
+        // reflectivity: 0,
         specular: 0x111111,
         shininess: 10,
-        flatShading: true,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        // wireframe: true
       }),
-      addGrid: true, //set to false to hide grid helper
+      addGrid: true, // set to false to hide grid helper
       grid: null,
       axis: null,
       controls: null,
@@ -113,9 +117,9 @@ export default {
   },
   methods: {
     setCameraPosition () {
-      let x = 21
-      let y = 3
-      let z = 34
+      let x = 38
+      let y = 8
+      let z = -11
       camera.position.set(x, y, z)
     },
     getCameraPosition: function () {
@@ -181,14 +185,17 @@ export default {
     },
     loadStl (geometry) {
       this.setMaterial()
+      // geometry.computeVertexNormals(true)
+      // geometry.computeFaceNormals(true)
+      geometry.center()
       this.mesh = new THREE.Mesh(geometry, this.meshMaterial)
       this.mesh.name = 'meshObj'
 
       // this.mesh.position.set(0, 0, 0)
-      // this.mesh.rotation.set(0, 0, 0)
+      this.mesh.rotation.set(0, 0, Math.PI / 2)
       // this.mesh.center()
 
-      this.mesh.scale.set(5, 5, 5)
+      this.mesh.scale.set(0.075, 0.075, 0.075)
 
       this.mesh.castShadow = true
       this.mesh.receiveShadow = true
