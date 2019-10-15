@@ -23,6 +23,11 @@
         </div>
       </div>
     </div>
+    <div class="columns">
+      <div class="column">
+        <h1>Page Title</h1>
+      </div>
+    </div>
   </div>
 </template>
 
