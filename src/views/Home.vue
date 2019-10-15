@@ -22,6 +22,7 @@
           </div>
           <div id="ui-viewport">
             <p><strong>Camera Position:</strong><br>{{ cameraPosition }}</p>
+            <p><strong>Viewport:</strong><br> {{viewportWidth}}px x {{toolHeight}} </p>
           </div>
         </div>
       </div>
@@ -150,8 +151,8 @@ export default {
     },
     addControls () {
       // Grid & Axis Helpers
-      let size = 1000
-      let divisions = 1000
+      let size = 50
+      let divisions = 50
       this.grid = new THREE.GridHelper(size, divisions, 0x777777, 0x777777)
       this.axis = new THREE.AxesHelper(1200)
       scene.add(this.grid)
