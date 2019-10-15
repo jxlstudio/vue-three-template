@@ -18,7 +18,7 @@
             <a class="controls" @click="resetView()"><font-awesome-icon icon="undo-alt" size="2x" /></a>
             <a v-if="!isMobile()" class="controls" @click="saveAsImage()"><font-awesome-icon icon="download" size="2x" /></a>
             <a v-if="!isMobile()" class="controls" @click="createPDF()"><font-awesome-icon icon="file-pdf" size="2x" /></a>
-            <!-- <a class="controls" @click="copyShareLink()"><font-awesome-icon class="fa-fw" icon="share-square" size="2x" /></a> -->
+            <a class="controls" @click="copyShareLink()"><font-awesome-icon class="fa-fw" icon="share-square" size="2x" /></a>
           </div>
         </div>
       </div>
@@ -365,20 +365,20 @@ export default {
         this.error('An error occured, please try again.')
       }
     },
-    error: function (msg) {
-      this.$toast.open({
+    error (msg) {
+      this.$buefy.toast.open({
         message: msg,
         type: 'is-danger'
       })
     },
-    success: function (msg) {
-      this.$toast.open({
+    success (msg) {
+      this.$buefy.toast.open({
         message: msg,
         type: 'is-success'
       })
     },
-    warning: function (msg) {
-      this.$toast.open({
+    warning (msg) {
+      this.$buefy.toast.open({
         message: msg,
         type: 'is-warning'
       })
