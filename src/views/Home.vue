@@ -20,6 +20,9 @@
             <a v-if="!isMobile()" class="controls" @click="createPDF()"><font-awesome-icon icon="file-pdf" size="2x" /></a>
             <a class="controls" @click="copyShareLink()"><font-awesome-icon class="fa-fw" icon="share-square" size="2x" /></a>
           </div>
+          <div id="ui-viewport">
+            <p><strong>Camera Position:</strong><br>{{ cameraPosition }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -32,6 +35,9 @@
 </template>
 
 <script>
+
+// Remember that one unit in three.js is one meter
+
 // @ is an alias to /src
 import jsPDF from 'jspdf'
 import Logo from '@/components/Logo.vue'
@@ -78,7 +84,8 @@ export default {
       viewportHeight: window.innerHeight,
       mobileMinHeight: 668,
       mobileMinHeightDifference: 200,
-      mobileMinWidth: 600
+      mobileMinWidth: 600,
+      cameraPosition: null
     }
   },
   mixins: [mixinDetectingMobile],
@@ -95,10 +102,19 @@ export default {
 
   },
   methods: {
+    setCameraPosition () {
+      let x = 19
+      let y = 10
+      let z = 36
+      camera.position.set(x, y, z)
+    },
+    getCameraPosition: function () {
+      this.cameraPosition = camera.position
+    },
     init () {
       let container = document.getElementById('tool')
 
-      camera.position.set(10, 10, 10)
+      this.setCameraPosition()
 
       this.addLights()
 
@@ -113,6 +129,8 @@ export default {
       this.addControls()
 
       this.onWindowResize()
+
+      this.getCameraPosition()
 
       // Responsive Resize
       window.addEventListener('resize', this.onWindowResize, false)
@@ -207,7 +225,7 @@ export default {
       renderer.setPixelRatio(window.devicePixelRatio)
       renderer.setSize(width, height)
 
-      renderer.gammaFactor = 1.25
+      renderer.gammaFactor = 2.2
       renderer.gammaInput = true
       renderer.gammaOutput = true
       renderer.shadowMap.enabled = true
@@ -257,7 +275,7 @@ export default {
       camera.zoom -= 0.25
     },
     resetView () {
-      camera.position.set(-10, 15, 40)
+      this.setCameraPosition()
       if (this.viewportHeight < this.mobileMinHeight || this.viewportWidth < this.mobileMinWidth) {
         camera.zoom = this.cameraZoomMobile
       } else {
@@ -433,6 +451,12 @@ export default {
       border-color: transparent;
       color: #343434;
     }
+  }
+  #ui-viewport {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
   }
   #spinner {
     display: none;
