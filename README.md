@@ -1,6 +1,6 @@
 # Vue + Three.js Template For Quick 3D Project setup
 
-Made for a quick setup of product design tools that use Three.js, Vue.js, jsPDF, and axios.
+Made for a quick setup of product design tools that use Three.js, Vue.js, jsPDF, Buefy/Bulma, and Axios.
 
 ## Project setup
 ```
