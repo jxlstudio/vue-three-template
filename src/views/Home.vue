@@ -86,6 +86,9 @@ export default {
       return link
     }
   },
+  watch: {
+
+  },
   methods: {
     init () {
       let container = document.getElementById('tool')
