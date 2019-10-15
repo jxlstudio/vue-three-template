@@ -1,5 +1,5 @@
 <template>
-    <img class="logo" :src="logo" @error="loadPng" alt="Oxtops Logo" width="175">
+    <img class="logo" :src="logo" @error="loadPng" alt="Oxtops Logo" width="150">
 </template>
 <script>
 import LogoSvg from '@/assets/logo.svg'
@@ -24,6 +24,6 @@ export default {
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 175px;
+    width: 150px;
 }
 </style>

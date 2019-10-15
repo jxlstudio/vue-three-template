@@ -13,16 +13,17 @@
           <Logo/>
           <div id="spinner"><font-awesome-icon icon="spinner" size="3x" spin /></div>
           <div id="ui-controls">
-            <a class="controls" @click="zoomIn()"><font-awesome-icon icon="plus" size="2x" /></a>
-            <a class="controls" @click="zoomOut()"><font-awesome-icon icon="minus" size="2x" /></a>
-            <a class="controls" @click="resetView()"><font-awesome-icon icon="undo-alt" size="2x" /></a>
-            <a v-if="!isMobile()" class="controls" @click="saveAsImage()"><font-awesome-icon icon="download" size="2x" /></a>
-            <a v-if="!isMobile()" class="controls" @click="createPDF()"><font-awesome-icon icon="file-pdf" size="2x" /></a>
-            <a class="controls" @click="copyShareLink()"><font-awesome-icon class="fa-fw" icon="share-square" size="2x" /></a>
+            <a class="controls" @click="zoomIn()"><font-awesome-icon icon="plus" size="lg" /></a>
+            <a class="controls" @click="zoomOut()"><font-awesome-icon icon="minus" size="lg" /></a>
+            <a class="controls" @click="resetView()"><font-awesome-icon icon="undo-alt" size="lg" /></a>
+            <a v-if="!isMobile()" class="controls" @click="saveAsImage()"><font-awesome-icon icon="download" size="lg" /></a>
+            <a v-if="!isMobile()" class="controls" @click="createPDF()"><font-awesome-icon icon="file-pdf" size="lg" /></a>
+            <a class="controls" @click="copyShareLink()"><font-awesome-icon class="fa-fw" icon="share-square" size="lg" /></a>
           </div>
           <div id="ui-viewport">
             <p><strong>Camera Position:</strong><br>{{ cameraPosition }}</p>
-            <p><strong>Viewport:</strong><br> {{viewportWidth}}px x {{toolHeight}} </p>
+            <p><strong>Viewport:</strong><br> {{viewportWidth}}px x {{viewportHeight}}px </p>
+            <p><strong>Canvas:</strong><br> {{viewportWidth}}px x {{toolHeight}}px </p>
           </div>
         </div>
       </div>
@@ -73,7 +74,14 @@ export default {
   },
   data () {
     return {
-      meshMaterial: null,
+      meshMaterial: new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        specular: 0x111111,
+        shininess: 10,
+        flatShading: true,
+        side: THREE.DoubleSide
+      }),
+      addGrid: true, //set to false to hide grid helper
       grid: null,
       axis: null,
       controls: null,
@@ -86,7 +94,8 @@ export default {
       mobileMinHeight: 668,
       mobileMinHeightDifference: 200,
       mobileMinWidth: 600,
-      cameraPosition: null
+      cameraPosition: null,
+      hexCode: '0xffffff'
     }
   },
   mixins: [mixinDetectingMobile],
@@ -104,9 +113,9 @@ export default {
   },
   methods: {
     setCameraPosition () {
-      let x = 19
-      let y = 10
-      let z = 36
+      let x = 21
+      let y = 3
+      let z = 34
       camera.position.set(x, y, z)
     },
     getCameraPosition: function () {
@@ -155,8 +164,10 @@ export default {
       let divisions = 50
       this.grid = new THREE.GridHelper(size, divisions, 0x777777, 0x777777)
       this.axis = new THREE.AxesHelper(1200)
-      scene.add(this.grid)
-      scene.add(this.axis)
+      if (this.addGrid) {
+        scene.add(this.grid)
+        scene.add(this.axis)
+      }
 
       // Controls
       this.controls = new OrbitControls(camera, renderer.domElement)
@@ -173,16 +184,18 @@ export default {
       this.mesh = new THREE.Mesh(geometry, this.meshMaterial)
       this.mesh.name = 'meshObj'
 
-      this.mesh.position.set(0, 0, 0)
-      this.mesh.rotation.set(0, 0, 0)
+      // this.mesh.position.set(0, 0, 0)
+      // this.mesh.rotation.set(0, 0, 0)
+      // this.mesh.center()
 
-      this.mesh.scale.set(1, 1, 1)
+      this.mesh.scale.set(5, 5, 5)
 
       this.mesh.castShadow = true
       this.mesh.receiveShadow = true
       this.mesh.colorsNeedUpdate = true
 
       scene.add(this.mesh)
+      this.mesh.center()
     },
     removeStl (callback) {
       let m = scene.getObjectByName('meshObj')
@@ -196,15 +209,8 @@ export default {
       this.loader.load(this.stl, this.loadStl)
     },
     setMaterial () {
-      this.meshMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        specular: 0x111111,
-        shininess: 10,
-        flatShading: true,
-        side: THREE.DoubleSide
-      })
-
-      // this.meshMaterial.color.setHex(this.hexCode)
+      this.meshMaterial.color.setHex(this.hexCode)
+      this.meshMaterial.color.convertSRGBToLinear()
     },
     addManager () {
       // Loading Manager
